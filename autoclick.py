@@ -1,26 +1,16 @@
-# importing time and threading 
 import time 
 import threading 
 from pynput.mouse import Button, Controller 
-# pynput.keyboard is used to watch events of 
-# keyboard for start and stop of auto-clicker 
 from pynput.keyboard import Listener, KeyCode 
 
 from playsound import playsound
 
-# four variables are created to 
-# control the auto-clicker 
 delay = 5.000
 button = Button.left 
 start_stop_key = KeyCode(char='`') 
 stop_key = KeyCode(char='`') 
 
-# threading.Thread is used 
-# to control clicks 
 class ClickMouse(threading.Thread): 
-	
-# delay and button is passed in class 
-# to check execution of auto-clicker 
 	def __init__(self, delay, button): 
 		super(ClickMouse, self).__init__() 
 		self.delay = delay 
@@ -36,13 +26,7 @@ class ClickMouse(threading.Thread):
 
 	def exit(self): 
 		self.stop_clicking() 
-		#self.program_running = False
-
-	# method to check and run loop until 
-	# it is true another loop will check 
-	# if it is set to true or not, 
-	# for mouse click it set to button 
-	# and delay. 
+	
 	def run(self): 
 		while self.program_running: 
 			while self.running: 
@@ -51,7 +35,6 @@ class ClickMouse(threading.Thread):
 			time.sleep(0.1) 
 
 
-# instance of mouse controller is created 
 mouse = Controller() 
 click_thread = ClickMouse(delay, button) 
 click_thread.start() 
@@ -62,12 +45,7 @@ def start():
     click_thread.start()
 
 print("ClickMouse created")
-# on_press method takes 
-# key as argument 
 def on_press(key): 
-	
-# start_stop_key will stop clicking 
-# if running flag is set to true 
 	if key == start_stop_key: 
 		if click_thread.running: 
 			playsound('clock.mp3')
@@ -75,15 +53,8 @@ def on_press(key):
 		else: 
 			playsound('click.mp3')
 			click_thread.start_clicking() 
-			
-	# here exit method is called and when 
-	# key is pressed it terminates auto clicker 
 	elif key == stop_key: 
 		click_thread.exit() 
-		#listener.stop() 
-		#start()
-
 
 with Listener(on_press=on_press) as listener: 
 	listener.join() 
-
